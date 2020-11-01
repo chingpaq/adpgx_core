@@ -39,29 +39,29 @@ const String kLato = 'Lato';
 const String kOpenSans = 'OpenSans';
 const String kRoboto = 'Roboto';
 const String kNotoSansJP = 'NotoSansJP';
-
-TextStyle kDailyGainsLogoTitlesInOrange = GoogleFonts.pacifico(
-    textStyle: TextStyle(
-      color: Colors.orange,
-      fontSize: kLargestFontSize,
-    ));
-
-TextStyle kDailyGainsLogoTitlesInWhite = GoogleFonts.pacifico(
-    textStyle: TextStyle(
-      color: Colors.white,
-      fontSize: kLargestFontSize,
-    ));
-
-TextStyle kDailyGainsLogoThemeForAppBarInWhite = GoogleFonts.pacifico(
-    textStyle: TextStyle(
-      color: Colors.white,
-      fontSize: kAppBarTitleFontSize,
-    ));
-
-TextStyle kDailyGainsLogoThemeForAppBar = GoogleFonts.pacifico(
-    textStyle: TextStyle(
-      fontSize: kAppBarTitleFontSize,
-    ));
+//
+// TextStyle kDailyGainsLogoTitlesInOrange = GoogleFonts.pacifico(
+//     textStyle: TextStyle(
+//       color: Colors.orange,
+//       fontSize: kLargestFontSize,
+//     ));
+//
+// TextStyle kDailyGainsLogoTitlesInWhite = GoogleFonts.pacifico(
+//     textStyle: TextStyle(
+//       color: Colors.white,
+//       fontSize: kLargestFontSize,
+//     ));
+//
+// TextStyle kDailyGainsLogoThemeForAppBarInWhite = GoogleFonts.pacifico(
+//     textStyle: TextStyle(
+//       color: Colors.white,
+//       fontSize: kAppBarTitleFontSize,
+//     ));
+//
+// TextStyle kDailyGainsLogoThemeForAppBar = GoogleFonts.pacifico(
+//     textStyle: TextStyle(
+//       fontSize: kAppBarTitleFontSize,
+//     ));
 
 TextStyle kBiggerViewsLabelStyles = GoogleFonts.lato(
     textStyle: TextStyle(

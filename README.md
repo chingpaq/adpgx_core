@@ -1,16 +1,51 @@
-# adpgx_core
+# Example implementation of the following can be found on this project
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  cupertino_icons
+  
+  flutter_redux
+  
+  google_fonts
+  
+  firebase_core
+  
+  firebase_auth
+  
+  flutter_webview_plugin
+  
+  provider_architecture
+  
+  stacked
+  
+  get_it
+  
+  injectable
+  
+  stacked_services
+  
+  auto_route
+  
+  font_awesome_flutter
+  
+  flutter_form_builder
+  
+  intl
+  
+  sqflite
+  
+  calendar_strip
+  
+  shared_preferences
+  
+  charts_flutter
+  
+  url_launcher
+  
+  package_info
+  
+  build_runner
+  
+  auto_route_generator
+  
+  injectable_generator
+  
+  flutter_launcher_icons

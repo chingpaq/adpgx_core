@@ -14,11 +14,8 @@ class LoginViewModel extends BaseViewModel {
   final AuthenticationService _authenticationService =
   locator<AuthenticationService>();
 
-
-
-
-  void navigateToHomePage() {
-    //_navigationService.navigateTo(Routes.homeViewRoute);
+  Future<dynamic> navigateToHomePage() async{
+    return _navigationService.back();
   }
 
   Future<String> loginUser(String email, String password) async {
@@ -52,12 +49,11 @@ class LoginViewModel extends BaseViewModel {
         FacebookAuthProvider.credential(result);
         final user = await _authenticationService.firebaseAuth
             .signInWithCredential(facebookAuthCred);
-        print(user);
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('username',user.user.displayName );
         await prefs.setString('email', user.user.email);
-        await prefs.setString('currency', 'USD');
-        await prefs.setString('pilot', 'true');
+
       } catch (e) {
         return e.toString();
       }
