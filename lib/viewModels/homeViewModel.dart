@@ -20,13 +20,12 @@ class HomeViewModel extends BaseViewModel {
     return await _navigationService.navigateTo(Routes.loginViewRoute);
   }
   Future<bool> handleStartUpLogic() async {
+    await _authenticationService.initFirebase();
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
     if (hasLoggedInUser) {
       print('Firebase account is logged in');
-      //_navigationService.navigateTo(Routes.homeViewRoute);
       return true;
     } else {
-      //_navigationService.navigateTo(Routes.welcomeViewRoute);
       print('There are no Firebase account logged in');
       return false;
     }

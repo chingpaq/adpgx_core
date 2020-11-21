@@ -18,6 +18,14 @@ class LoginViewModel extends BaseViewModel {
     return _navigationService.back();
   }
 
+  Future<dynamic> navigateToSignUpPage() async{
+    return await _navigationService.navigateTo(Routes.signUpViewRoute);
+  }
+
+  Future gotoLoginPage() async{
+    return await _navigationService.navigateTo(Routes.loginViewRoute);
+  }
+
   Future<String> loginUser(String email, String password) async {
     try {
       final user = await _authenticationService.firebaseAuth

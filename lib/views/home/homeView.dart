@@ -1,8 +1,13 @@
 import "package:flutter/material.dart";
 import "package:stacked/stacked.dart";
+import 'package:redux/redux.dart';
 
 import '../../constants.dart';
 import '../../viewModels/homeViewModel.dart';
+import '../business/newTransactions.dart';
+import '../business/transactionsView.dart';
+import '../../widgets/drawerMenu.dart';
+
 
 class HomeView extends StatefulWidget {
   @override
@@ -10,18 +15,23 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final List<Widget> viewContainer = [];
+  List<Widget> viewContainer;
   bool logged = false;
+  Store store;
 
   @override
   void initState() {
+    viewContainer = [
+      NewTransactionView(store:store),
+      TransactionView(store:store)
+    ];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
-      onModelReady: (model) async{
+      onModelReady: (model) async {
         logged = await model.handleStartUpLogic();
         if (logged == false) {
           await model.gotoLoginPage();
@@ -31,6 +41,7 @@ class _HomeViewState extends State<HomeView> {
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          drawer: DrawerWidget(),
           body: IndexedStack(
             index: _selectedIndex,
             children: viewContainer,
@@ -40,19 +51,23 @@ class _HomeViewState extends State<HomeView> {
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                label: 'Accounts',
+                label: 'Home',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.content_paste),
-                label: 'Budget',
+                label: 'Activity',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.view_list),
-                label: 'To do',
+                icon: Icon(Icons.payment),
+                label: 'Payment',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.pie_chart),
-                label: 'Dashboard',
+                icon: Icon(Icons.messenger_outline),
+                label: 'Messages',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline),
+                label: 'Profile',
               ),
             ],
             currentIndex: _selectedIndex,

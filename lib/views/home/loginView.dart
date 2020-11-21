@@ -1,17 +1,18 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'dart:io';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
+import '../../viewModels/loginViewModel.dart';
+import 'signUpView.dart';
 import '../../constants.dart';
 import '../../widgets/snackBar.dart';
-import '../../viewModels/loginViewModel.dart';
-import '../../widgets/customFormBuilders.dart';
 
 class LoginView extends StatefulWidget {
   LoginView({Key key, this.title}) : super(key: key);
+
   final String title;
+
   @override
   _LoginViewState createState() => _LoginViewState();
 }
@@ -38,6 +39,38 @@ class _LoginViewState extends State<LoginView> {
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _entryField(String title, TextEditingController controller,
+      {bool isPassword = false}) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: kLabelsTextHeaderStyle,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+              obscureText: isPassword,
+              controller: controller,
+              decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true))
+        ],
       ),
     );
   }
@@ -155,8 +188,8 @@ class _LoginViewState extends State<LoginView> {
   Widget _createAccountLabel() {
     return InkWell(
       onTap: () {
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => SignUpView()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SignUpView()));
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
@@ -192,7 +225,6 @@ class _LoginViewState extends State<LoginView> {
       alignment: Alignment.center,
       child: Text(
         kAppName,
-        style: kBiggerViewsLabelStyles,
       ),
     );
   }
@@ -203,104 +235,112 @@ class _LoginViewState extends State<LoginView> {
     return ViewModelBuilder<LoginViewModel>.reactive(
       viewModelBuilder: () => LoginViewModel(),
       builder: (context, model, child) => Scaffold(
-          body: FormBuilder(
-            initialValue: {},
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Container(
-              height: height,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(height: height * .2),
-                          _appTitle(),
-                          SizedBox(height: 20),
-                          formBuilderEntryField(title: "Email Address", handler: (){}),
-                          formBuilderEntryField(title: "Password", handler: (){}),
-                          SizedBox(height: 20),
-                          _loginButton(() async {
-                            if (emailController.text.isEmpty ||
-                                passwordController.text.isEmpty) {
-                              CustomSnackBar.showSnackBar(
-                                  title: 'Login',
-                                  message:
-                                  'Please enter your email address and password',
-                                  handler2: () {},
-                                  handler: () {},
-                                  buttonTitle: 'Ok');
-
-                            } else {
-                              var results = await model.loginUser(
-                                  emailController.text.trim(),
-                                  passwordController.text.trim());
-                              if (results == "Ok") {
-                                emailController.clear();
-                                passwordController.clear();
-                                model.navigateToHomePage();
-                              } else {
-
-                                if (results.contains('WRONG_PASSWORD'))
-                                  CustomSnackBar.showSnackBar(
-                                      title: 'Error',
-                                      message:
-                                      'You have entered an incorrect password',
-                                      handler2: () {},
-                                      handler: () {},
-                                      buttonTitle: 'Ok');
-                                else if (results.contains('INVALID_EMAIL'))
-                                  CustomSnackBar.showSnackBar(
-                                      title: 'Error',
-                                      message:
-                                      'You have entered an incorrect email address',
-                                      handler2: () {},
-                                      handler: () {},
-                                      buttonTitle: 'Ok');
-                                else if (results.contains('ERROR_USER_NOT_FOUND'))
-                                  CustomSnackBar.showSnackBar(
-                                      title: 'Error',
-                                      message:
-                                      'Email is not registered',
-                                      handler2: () {},
-                                      handler: () {},
-                                      buttonTitle: 'Ok');
-                                else
-                                  CustomSnackBar.showSnackBar(title:'Error', message: results, handler2: (){}, handler: (){},buttonTitle: 'Ok');
-
-                              }
-                            }
-                          }),
-
-                          if (Platform.isIOS==false) _divider(),
-                          if (Platform.isIOS==false) _facebookButton(() async {
-                            var results = await model.loginUserViaFacebook(
-                              emailController.text,
-                              passwordController.text,
-                              context,
-                            );
-                            results == "Ok"
-                                ? model.navigateToHomePage()
-                                : CustomSnackBar.showSnackBar(title:'Errors' , message: results, handler2:(){} , handler: (){});
-                          }),
-                          SizedBox(height: height * .055),
-                          _createAccountLabel(),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 40,
-                    left: 0,
-                    child: _backButton(),
-                  ),
-                ],
+          body: Container(
+        height: height,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: height * .2),
+                    _appTitle(),
+                    SizedBox(height: 20),
+                    _entryField("Email Address", emailController),
+                    _entryField("Password", passwordController,
+                        isPassword: true),
+                    SizedBox(height: 20),
+                    _loginButton(() async {
+                      if (emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
+                        CustomSnackBar.showSnackBar(
+                            title: 'Login',
+                            message:
+                                'Please enter your email address and password',
+                            handler2: () {},
+                            handler: () {},
+                            buttonTitle: 'Ok');
+                      } else {
+                        var results = await model.loginUser(
+                            emailController.text.trim(),
+                            passwordController.text.trim());
+                        if (results == "Ok") {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setString(
+                              'email', emailController.text.trim());
+                          if (prefs.getString('username') == null ||
+                              prefs.getString('username') == '') {
+                            await prefs.setString(
+                                'username', emailController.text.trim());
+                            await prefs.setString('currency', 'USD');
+                          }
+                          emailController.clear();
+                          passwordController.clear();
+                          model.navigateToHomePage();
+                        } else {
+                          //DialogBox.showOkDialog("Error", results);
+                          if (results.contains('WRONG_PASSWORD'))
+                            CustomSnackBar.showSnackBar(
+                                title: 'Error',
+                                message:
+                                    'You have entered an incorrect password',
+                                handler2: () {},
+                                handler: () {},
+                                buttonTitle: 'Ok');
+                          else if (results.contains('INVALID_EMAIL'))
+                            CustomSnackBar.showSnackBar(
+                                title: 'Error',
+                                message:
+                                    'You have entered an incorrect email address',
+                                handler2: () {},
+                                handler: () {},
+                                buttonTitle: 'Ok');
+                          else if (results.contains('ERROR_USER_NOT_FOUND'))
+                            CustomSnackBar.showSnackBar(
+                                title: 'Error',
+                                message: 'Email is not registered',
+                                handler2: () {},
+                                handler: () {},
+                                buttonTitle: 'Ok');
+                          else
+                            CustomSnackBar.showSnackBar(
+                                title: 'Error',
+                                message: results,
+                                handler2: () {},
+                                handler: () {},
+                                buttonTitle: 'Ok');
+                        }
+                      }
+                    }),
+                    if (Platform.isIOS == false) _divider(),
+                    if (Platform.isIOS == false)
+                      _facebookButton(() async {
+                        var results = await model.loginUserViaFacebook(
+                          emailController.text,
+                          passwordController.text,
+                          context,
+                        );
+                        results == "Ok"
+                            ? model.navigateToHomePage()
+                            : CustomSnackBar.showSnackBar(
+                                title: 'Errors',
+                                message: results,
+                                handler2: () {},
+                                handler: () {});
+                      }),
+                    SizedBox(height: height * .055),
+                    _createAccountLabel(),
+                  ],
+                ),
               ),
-            )
-          )),
+            ),
+          ],
+        ),
+      )),
     );
   }
 }
