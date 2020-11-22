@@ -6,6 +6,10 @@ import '../../constants.dart';
 import '../../viewModels/homeViewModel.dart';
 import '../business/newTransactions.dart';
 import '../business/transactionsView.dart';
+import '../business/chatView.dart';
+import '../business/paymentsView.dart';
+import '../business/accountsView.dart';
+
 import '../../widgets/drawerMenu.dart';
 
 
@@ -24,9 +28,9 @@ class _HomeViewState extends State<HomeView> {
     viewContainer = [
       NewTransactionView(store:store),
       TransactionView(store:store),
-      NewTransactionView(store:store),
-      TransactionView(store:store),
-      NewTransactionView(store:store),
+      ChatView(store: store,),
+      PaymentsView(store: store,),
+      AccountsView(store: store,)
     ];
     super.initState();
   }
@@ -34,12 +38,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
-      onModelReady: (model) async {
-        // logged = await model.handleStartUpLogic();
-        // if (logged == false) {
-        //   await model.gotoLoginPage();
-        // }
-      },
+      onModelReady: (model) async {},
       viewModelBuilder: () => HomeViewModel(),
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async => false,
