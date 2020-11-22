@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'authentication.dart';
+import 'firestore.dart';
 @module
 abstract class RegisterModule {
   @lazySingleton
@@ -11,4 +12,6 @@ abstract class RegisterModule {
   AuthenticationService get authenticationService;
   @lazySingleton
   SnackbarService get snackBarService;
+  @lazySingleton
+  FireStoreService get fireStoreService;
 }

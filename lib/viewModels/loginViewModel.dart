@@ -1,5 +1,6 @@
 import 'package:stacked_services/stacked_services.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/router.gr.dart';
@@ -7,12 +8,13 @@ import '../services/locator.dart';
 import '../services/authentication.dart';
 import '../widgets/customWebView.dart';
 import '../constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../services/firestore.dart';
 
 class LoginViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final AuthenticationService _authenticationService =
   locator<AuthenticationService>();
+  final FireStoreService _fireStoreService = locator<FireStoreService>();
 
   Future<dynamic> navigateToHomePage() async{
     return _navigationService.back();
@@ -26,6 +28,10 @@ class LoginViewModel extends BaseViewModel {
     return await _navigationService.navigateTo(Routes.loginViewRoute);
   }
 
+  Future gotoHomePage() async{
+    return await _navigationService.navigateTo(Routes.homeViewRoute);
+  }
+
   Future<String> loginUser(String email, String password) async {
     try {
       final user = await _authenticationService.firebaseAuth
@@ -37,6 +43,20 @@ class LoginViewModel extends BaseViewModel {
       return e.toString();
     }
     return "Ok";
+  }
+
+  Future<bool> handleStartUpLogic() async {
+    await _authenticationService.initFirebase();
+    _fireStoreService.initFireStore();
+
+    var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
+    if (hasLoggedInUser) {
+      print('Firebase account is logged in');
+      return true;
+    } else {
+      print('There are no Firebase account logged in');
+      return false;
+    }
   }
 
   Future<String> loginUserViaFacebook(

@@ -2,15 +2,21 @@ import 'package:provider_architecture/_base_viewmodels.dart';
 import 'package:stacked_services/stacked_services.dart';
 import '../services/locator.dart';
 import '../services/authentication.dart';
-//import '../services/router.gr.dart';
+import '../services/firestore.dart';
+import '../services/router.gr.dart';
 
 class SignUpViewModel extends BaseViewModel {
   final AuthenticationService _authenticationService =
-  locator<AuthenticationService>();
+      locator<AuthenticationService>();
   final NavigationService _navigationService = locator<NavigationService>();
+  final FireStoreService _fireStoreService = locator<FireStoreService>();
 
   void navigateToHomePage() {
     _navigationService.back();
+  }
+
+  Future gotoHomePage() async{
+    return await _navigationService.navigateTo(Routes.homeViewRoute);
   }
 
   Future<dynamic> goBack() async {
@@ -18,12 +24,22 @@ class SignUpViewModel extends BaseViewModel {
   }
 
   Future<String> registerUser(
-      String userName, String email, String password) async {
+      {String userName,
+      String email,
+      String password,
+      String firstName,
+      String lastName}) async {
     try {
       final newUser = await _authenticationService.firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
 
       if (newUser != null) {
+        await _fireStoreService.addUser(
+          firstName: firstName,
+          lastName: lastName,
+          userName: userName,
+          uID: newUser.user.uid,
+        );
         return "Email was successfully registered";
       }
     } catch (e) {

@@ -2,11 +2,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-
 import '../../viewModels/signUpViewModel.dart';
-import 'loginView.dart';
 import '../../constants.dart';
 import '../../widgets/snackBar.dart';
+import 'loginView.dart';
 
 class SignUpView extends StatefulWidget {
   @override
@@ -14,6 +13,8 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -79,34 +80,42 @@ class _SignUpViewState extends State<SignUpView> {
     return InkWell(
         onTap: () async {
           if (passwordController.text == verifyPasswordController.text) {
-
-
             var result = await model.registerUser(
-              usernameController.text.trim(),
-              emailController.text.trim(),
-              passwordController.text.trim(),
+              firstName: firstNameController.text,
+              lastName: lastNameController.text,
+              userName: usernameController.text.trim(),
+              email: emailController.text.trim(),
+              password: passwordController.text.trim(),
             );
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString('username', usernameController.text.trim());
             await prefs.setString('email', emailController.text.trim());
-            await prefs.setString('currency', 'USD');
             await prefs.setString('pilot', 'true');
 
-            CustomSnackBar.showSnackBar(title:'Registration' , message: result, handler2:(){} , handler: (){});
+            CustomSnackBar.showSnackBar(
+                title: 'Registration',
+                message: result,
+                handler2: () {},
+                handler: () {});
 
             passwordController.clear();
             verifyPasswordController.clear();
 
-            if (result.contains('Email was successfully registered')){
+            if (result.contains('Email was successfully registered')) {
               emailController.clear();
               usernameController.clear();
-              model.navigateToHomePage();
+              Navigator.pop(context, 'back');
+              model.gotoHomePage();
             }
           } else {
             passwordController.clear();
             verifyPasswordController.clear();
 
-            CustomSnackBar.showSnackBar(title:'Registration' , message: 'Passwords does not match', handler2:(){} , handler: (){});
+            CustomSnackBar.showSnackBar(
+                title: 'Registration',
+                message: 'Passwords does not match',
+                handler2: () {},
+                handler: () {});
           }
         },
         child: Container(
@@ -166,18 +175,6 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  Widget _appTitle() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 13),
-      alignment: Alignment.center,
-      child: Text(
-        kAppName,
-
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -185,39 +182,39 @@ class _SignUpViewState extends State<SignUpView> {
       viewModelBuilder: () => SignUpViewModel(),
       builder: (context, model, child) => Scaffold(
           body: Container(
-            height: height,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(height: height * .2),
-                        _appTitle(),
-                        SizedBox(height: 20),
-                        _entryField("Username", usernameController),
-                        _entryField("Email Address", emailController),
-                        _entryField("Password", passwordController,
-                            isPassword: true),
-                        _entryField("Verify Password", verifyPasswordController,
-                            isPassword: true),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _registerNowButton(model, context),
-                        SizedBox(height: height * .14),
-                        _loginAccountLabel(),
-                      ],
+        height: height,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 80),
+                    _entryField("First Name", firstNameController),
+                    _entryField("Last Name", lastNameController),
+                    _entryField("Username", usernameController),
+                    _entryField("Email Address", emailController),
+                    _entryField("Password", passwordController,
+                        isPassword: true),
+                    _entryField("Verify Password", verifyPasswordController,
+                        isPassword: true),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
+                    _registerNowButton(model, context),
+                    SizedBox(height: height * .14),
+                    _loginAccountLabel(),
+                  ],
                 ),
-                Positioned(top: 40, left: 0, child: _backButton()),
-              ],
+              ),
             ),
-          )),
+            Positioned(top: 40, left: 0, child: _backButton()),
+          ],
+        ),
+      )),
     );
   }
 }

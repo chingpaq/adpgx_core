@@ -63,7 +63,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           print('Nothing happens');
         } else {
           print('Account signed out');
-          await _navigationService.navigateTo(Routes.loginViewRoute);
+          //await _navigationService.navigateTo(Routes.loginViewRoute);
+          _navigationService.back();
         }
       },
       handler2: () {},

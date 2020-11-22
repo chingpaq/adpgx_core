@@ -21,6 +21,7 @@ class _LoginViewState extends State<LoginView> {
   String username;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool logged = false;
 
   Widget _backButton() {
     return InkWell(
@@ -185,7 +186,7 @@ class _LoginViewState extends State<LoginView> {
         ));
   }
 
-  Widget _createAccountLabel() {
+  Widget _registerLabel() {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -234,6 +235,12 @@ class _LoginViewState extends State<LoginView> {
     final height = MediaQuery.of(context).size.height;
     return ViewModelBuilder<LoginViewModel>.reactive(
       viewModelBuilder: () => LoginViewModel(),
+      onModelReady: (model) async {
+        logged = await model.handleStartUpLogic();
+        if (logged == true) {
+          await model.gotoHomePage();
+        }
+      },
       builder: (context, model, child) => Scaffold(
           body: Container(
         height: height,
@@ -276,13 +283,11 @@ class _LoginViewState extends State<LoginView> {
                               prefs.getString('username') == '') {
                             await prefs.setString(
                                 'username', emailController.text.trim());
-                            await prefs.setString('currency', 'USD');
                           }
                           emailController.clear();
                           passwordController.clear();
-                          model.navigateToHomePage();
+                          model.gotoHomePage();
                         } else {
-                          //DialogBox.showOkDialog("Error", results);
                           if (results.contains('WRONG_PASSWORD'))
                             CustomSnackBar.showSnackBar(
                                 title: 'Error',
@@ -299,10 +304,18 @@ class _LoginViewState extends State<LoginView> {
                                 handler2: () {},
                                 handler: () {},
                                 buttonTitle: 'Ok');
-                          else if (results.contains('ERROR_USER_NOT_FOUND'))
+                          else if (results.contains('no user record'))
                             CustomSnackBar.showSnackBar(
                                 title: 'Error',
                                 message: 'Email is not registered',
+                                handler2: () {},
+                                handler: () {},
+                                buttonTitle: 'Ok');
+                          else if (results.contains('WRONG_PASSWORD'))
+                            CustomSnackBar.showSnackBar(
+                                title: 'Error',
+                                message:
+                                'You have entered an incorrect password',
                                 handler2: () {},
                                 handler: () {},
                                 buttonTitle: 'Ok');
@@ -333,7 +346,7 @@ class _LoginViewState extends State<LoginView> {
                                 handler: () {});
                       }),
                     SizedBox(height: height * .055),
-                    _createAccountLabel(),
+                    _registerLabel(),
                   ],
                 ),
               ),

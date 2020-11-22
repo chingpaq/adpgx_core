@@ -13,12 +13,12 @@ import '../views/home/homeView.dart';
   routes: <AutoRoute>[
     CupertinoRoute(
         page: HomeView,
-        initial: true,
+        initial: false,
         fullscreenDialog: false,
         name: "homeViewRoute"),
     CupertinoRoute(
         page: LoginView,
-        initial: false,
+        initial: true,
         fullscreenDialog: false,
         name: "loginViewRoute"),
     CupertinoRoute(

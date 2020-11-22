@@ -30,18 +30,8 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         debugShowCheckedModeBanner: false,
-        initialRoute: Routes.homeViewRoute,
+        initialRoute: Routes.loginViewRoute,
         onGenerateRoute: CustomRouter().onGenerateRoute,
-
-        // onGenerateInitialRoutes: (route) {
-        //   return [
-        //     MaterialPageRoute(
-        //       builder: (_) => HomeView(
-        //         store: store,
-        //       ),
-        //     ),
-        //   ];
-        // },
         navigatorKey: locator<NavigationService>().navigatorKey,
       ),
     );

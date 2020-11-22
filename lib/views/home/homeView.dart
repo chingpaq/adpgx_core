@@ -23,7 +23,10 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     viewContainer = [
       NewTransactionView(store:store),
-      TransactionView(store:store)
+      TransactionView(store:store),
+      NewTransactionView(store:store),
+      TransactionView(store:store),
+      NewTransactionView(store:store),
     ];
     super.initState();
   }
@@ -32,10 +35,10 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       onModelReady: (model) async {
-        logged = await model.handleStartUpLogic();
-        if (logged == false) {
-          await model.gotoLoginPage();
-        }
+        // logged = await model.handleStartUpLogic();
+        // if (logged == false) {
+        //   await model.gotoLoginPage();
+        // }
       },
       viewModelBuilder: () => HomeViewModel(),
       builder: (context, model, child) => WillPopScope(

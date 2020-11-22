@@ -1,8 +1,10 @@
+import 'package:adpgx_core/services/firestore.dart';
 import 'package:provider_architecture/_base_viewmodels.dart';
 import 'package:stacked_services/stacked_services.dart';
 import '../services/authentication.dart';
 import '../services/locator.dart';
 import '../services/router.gr.dart';
+
 
 class HomeViewModel extends BaseViewModel {
   String _title = 'Welcome View';
@@ -11,6 +13,7 @@ class HomeViewModel extends BaseViewModel {
   final AuthenticationService _authenticationService =
   locator<AuthenticationService>();
   final NavigationService _navigationService = locator<NavigationService>();
+  final FireStoreService _fireStoreService = locator<FireStoreService>();
 
   Future<dynamic> goBack() async{
     return _navigationService.back();
@@ -21,6 +24,8 @@ class HomeViewModel extends BaseViewModel {
   }
   Future<bool> handleStartUpLogic() async {
     await _authenticationService.initFirebase();
+    _fireStoreService.initFireStore();
+
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
     if (hasLoggedInUser) {
       print('Firebase account is logged in');
