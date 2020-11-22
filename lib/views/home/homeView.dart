@@ -28,8 +28,8 @@ class _HomeViewState extends State<HomeView> {
     viewContainer = [
       NewTransactionView(store:store),
       TransactionView(store:store),
-      ChatView(store: store,),
       PaymentsView(store: store,),
+      ChatView(store: store,),
       AccountsView(store: store,)
     ];
     super.initState();

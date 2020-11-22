@@ -2,8 +2,8 @@ import 'package:adpgx_core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-
-
+import 'package:provider/provider.dart';
+import '../../services/dbHelper.dart';
 import '../../models/appState.dart';
 import '../../widgets/drawerMenu.dart';
 
@@ -27,6 +27,10 @@ class _TransactionViewState extends State<TransactionView> {
                   title: Text(kAppName),
                 ),
                 drawer: DrawerWidget(),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: ()=> context.read<DBHelper>().testNotifier(),
+                  child: Icon(Icons.chat_bubble_outline),
+                ),
                 body: Center(
                   child: StoreConnector<AppState, AppState>(
                       converter: (store) => store.state,

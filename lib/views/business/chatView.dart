@@ -2,8 +2,9 @@ import 'package:adpgx_core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:provider/provider.dart';
 
-
+import '../../services/dbHelper.dart';
 import '../../models/appState.dart';
 import '../../widgets/drawerMenu.dart';
 
@@ -31,12 +32,28 @@ class _ChatViewState extends State<ChatView> {
                   child: StoreConnector<AppState, AppState>(
                       converter: (store) => store.state,
                       builder: (context, value) {
-                        return Text('${value.coreMap['Test']}');
+                        return Column(
+                          children: [
+                            Text('${value.coreMap['Test']}'),
+                            TestWidgetForProvider(),
+                          ],
+                        );
                       }),
                 ),
               );
             }),
       ),
+    );
+  }
+}
+
+class TestWidgetForProvider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+        '${context
+            .watch<DBHelper>()
+            .testString}',
     );
   }
 }

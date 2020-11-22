@@ -2,18 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:provider/provider.dart';
 
 import 'redux/reducers.dart';
 import 'models/appState.dart';
 import 'services/locator.dart';
-import 'views/home/homeView.dart';
 import 'constants.dart';
 import 'services/router.gr.dart';
+import 'services/dbHelper.dart';
 
 void main() {
   setupLocator();
   setupSnackBarUi();
-  runApp(MyApp());
+  //runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => DBHelper(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

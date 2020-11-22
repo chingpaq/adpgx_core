@@ -9,6 +9,7 @@ import '../../models/appState.dart';
 import '../../widgets/customFormBuilders.dart';
 import '../../constants.dart';
 
+
 class NewTransactionView extends StatefulWidget {
   final Store store;
   NewTransactionView({this.store});
