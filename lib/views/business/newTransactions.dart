@@ -20,6 +20,8 @@ class NewTransactionView extends StatefulWidget {
 
 class _NewTransactionViewState extends State<NewTransactionView> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+  String formBuilderString = 'Type Something';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,22 +37,31 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                         padding: EdgeInsets.only(right: 30.0, top: 20),
                         child: GestureDetector(
                             onTap: () {
+                              if (_fbKey.currentState.saveAndValidate()) {
+                                var value = _fbKey.currentState.value;
+                                setState(() {
+                                  formBuilderString= value['Form Builder Entry Field'];
+                                });
+
+                              }
                               context.read<DBHelper>().testNotifier();
                             },
-                            child: Text('Save', style: kLabelsTextHeaderStyleInWhite))),
+                            child: Text('Provider', style: kLabelsTextHeaderStyleInWhite))),
                   ],
                 ),
                 drawer: DrawerWidget(),
                 body: Center(
                   child: FormBuilder(
-                    initialValue: {},
+                    initialValue: {
+                      'Form Builder Entry Field' : formBuilderString
+                    },
                     key: _fbKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         formBuilderEntryField(
-                            title: 'Name', isRequired: true, handler: () {}),
+                            title: 'Form Builder Entry Field', isRequired: true, handler: () {}),
                         SizedBox(
                           height: 100,
                         ),
@@ -59,6 +70,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                             builder: (context, value) {
                               return Text('${value.coreMap['Test']}');
                             }),
+                        Text(formBuilderString),
                       ],
                     ),
                   ),
@@ -70,7 +82,10 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                   builder: (context, callback) {
                     return FloatingActionButton(
                       onPressed: callback,
-                      child: Icon(Icons.add),
+                      child: Column(children: [
+                        Icon(Icons.add),
+                        Text('Redux'),
+                      ],),
                     );
                   },
                 ),
