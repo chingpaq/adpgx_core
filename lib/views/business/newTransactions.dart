@@ -8,7 +8,8 @@ import '../../widgets/drawerMenu.dart';
 import '../../models/appState.dart';
 import '../../widgets/customFormBuilders.dart';
 import '../../constants.dart';
-
+import 'package:provider/provider.dart';
+import '../../services/dbHelper.dart';
 
 class NewTransactionView extends StatefulWidget {
   final Store store;
@@ -29,6 +30,15 @@ class _NewTransactionViewState extends State<NewTransactionView> {
               return Scaffold(
                 appBar: AppBar(
                   title: Text(kAppName),
+                  actions: [
+                    Padding(
+                        padding: EdgeInsets.only(right: 30.0, top: 20),
+                        child: GestureDetector(
+                            onTap: () {
+                              context.read<DBHelper>().testNotifier();
+                            },
+                            child: Text('Save', style: kLabelsTextHeaderStyleInWhite))),
+                  ],
                 ),
                 drawer: DrawerWidget(),
                 body: Center(
